@@ -7,7 +7,7 @@ public class Runner {
 	public static void main(String[] args){
 
 
-		JFrame frame = new JFrame("Game");
+		JFrame frame = new JFrame("Q2 Project");
 		 
 		Screen sc = new Screen();
 		frame.add(sc);

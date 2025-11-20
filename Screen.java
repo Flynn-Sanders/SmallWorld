@@ -16,9 +16,11 @@ public class Screen extends JPanel implements KeyListener {
         this.setFocusable(true);
         addKeyListener(this);
 
+        map = new MyHashTable<>();
+
 
         try {
-            Scanner scan = new Scanner(new FileReader("MapExportFile.txt"));             
+            Scanner scan = new Scanner(new FileReader("PA_map.txt"));             
             int row=0; //Each line in your text file is a row
             while (scan.hasNextLine()){
                 //Reads in one line at a time.
@@ -28,9 +30,8 @@ public class Screen extends JPanel implements KeyListener {
                 String[] numberArray = line.split(" ");  
                 for(int col=0;col<numberArray .length;col++){  //Each number in the line is a column
                     Location key = new Location(row,col);
-                    String value = numberArray[col];
-                    //Based upon the value, create your mapObject
-                    //Put your Location key and mapObject in your Hash Table
+                    int value = Integer.parseInt(numberArray[col]);
+                    map.put(key, new MapObject(value));
                 }
                 row++;
             }
@@ -42,14 +43,24 @@ public class Screen extends JPanel implements KeyListener {
 
     @Override
     public Dimension getPreferredSize(){
-        return new Dimension(800,600);
+        return new Dimension(1920,1080);
     }
 
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
 
-        
+        DLList<Location> keys = map.keySet().toLinkedList();
+        for (int i = 0; i < keys.size(); i++) {
+            Location loc = keys.get(i);
+            DLList<MapObject> objs = map.get(loc);
+            if (objs != null) {
+                for (int j = 0; j < objs.size(); j++) {
+                    MapObject mo = objs.get(j);
+                    mo.draw(g, loc.getCol(), loc.getRow());
+                }
+            }
+        }   
     }
 
     @Override

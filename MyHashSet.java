@@ -4,29 +4,34 @@ public class MyHashSet<E>{
     
     public MyHashSet(){
       size = 0;
-      hashArray = new Object[100];
+      hashArray = new Object[1009];
     }
     public boolean contains(Object o){
-      int location = o.hashCode();
-      if(hashArray[location] != null && o.equals(hashArray[location])){
-        return true;
-      }
-      return false;
+      int idx = index(o);
+        return hashArray[idx] != null && o.equals(hashArray[idx]);
+    }
+    private int index(Object o) {
+      return Math.abs(o.hashCode()) % hashArray.length;
     }
     public void clear(){
       size = 0;
-      hashArray = new Object[1000];
+      hashArray = new Object[1009];
     }
     public boolean add(E e){
-      if(contains(e)) return false;
-      hashArray[e.hashCode()] = e;
-      size++; return true;
-    }
-    public boolean remove(Object o){
-      if(!contains(o)) return false;
-        hashArray[o.hashCode()] = null;
-      size--; return true;
-    }
+    if (contains(e)) return false;
+    int idx = index(e);
+    hashArray[idx] = e;
+    size++;
+    return true;
+  }
+
+  public boolean remove(Object o){
+      if (!contains(o)) return false;
+      int idx = index(o);
+      hashArray[idx] = null;
+      size--;
+      return true;
+  }
     public int size(){ return size; }
     
     @SuppressWarnings("unchecked")

@@ -1,24 +1,38 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class Screen extends JPanel implements KeyListener {
     private MyHashTable<Location,MapObject> map;
+    private static BufferedImage playerImg;
 
     private int playerRow = 15;
     private int playerCol = 15;
 
     private int cameraRow = 0;
-    private int cameraCol = 15;  
-    private int viewCols = 15;  
+    private int cameraCol = 0;  
+    private int viewRows = 35;
+    private int viewCols = 35;  
 
-    private int tileSize = 45;
+    private int tileSize = 25;
 
+
+    static {
+        try {
+            playerImg = ImageIO.read(new File("images/player.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }  
     public Screen(){
         this.setLayout(null);
         this.setFocusable(true);
@@ -83,7 +97,7 @@ public class Screen extends JPanel implements KeyListener {
         int playerScreenRow = playerRow - cameraRow;
         int playerScreenCol = playerCol - cameraCol;
         g.setColor(Color.red);
-        g.fillOval(playerScreenCol * tileSize, playerScreenRow * tileSize, tileSize, tileSize);
+        g.drawImage(playerImg, playerScreenCol * tileSize, playerScreenRow * tileSize, tileSize, tileSize, null);
 
     }
 

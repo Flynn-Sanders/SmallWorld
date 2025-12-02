@@ -5,13 +5,15 @@ public class Location {
         row=r; col=c;
     }
     public int hashCode(){
-        return row * 125 + col;
+        return row * 100 + col;
     }
-    public boolean equals(Object o){
-        int x = ((Location)o).getRow();
-        int y = ((Location)o).getCol();
-        return row==x && col==y;
-    }
+    @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Location)) return false;
+            Location other = (Location) o;
+            return row == other.row && col == other.col;
+        }
     public int getRow(){return row; }
     public int getCol(){ return col; }
 }

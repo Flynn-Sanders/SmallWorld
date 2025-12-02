@@ -4,7 +4,7 @@ public class MyHashSet<E>{
     
     public MyHashSet(){
       size = 0;
-      hashArray = new Object[1009];
+      hashArray = new Object[10000];
     }
     public boolean contains(Object o){
       int idx = index(o);
@@ -15,7 +15,7 @@ public class MyHashSet<E>{
     }
     public void clear(){
       size = 0;
-      hashArray = new Object[1009];
+      hashArray = new Object[10000];
     }
     public boolean add(E e){
     if (contains(e)) return false;

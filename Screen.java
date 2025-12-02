@@ -10,6 +10,14 @@ import javax.swing.JPanel;
 public class Screen extends JPanel implements KeyListener {
     private MyHashTable<Location,MapObject> map;
 
+    private int playerRow = 15;
+    private int playerCol = 15;
+
+    private int cameraRow = 0;
+    private int cameraCol = 15;  
+    private int viewCols = 15;  
+
+    private int tileSize = 45;
 
     public Screen(){
         this.setLayout(null);
@@ -43,7 +51,7 @@ public class Screen extends JPanel implements KeyListener {
 
     @Override
     public Dimension getPreferredSize(){
-        return new Dimension(1920,1080);
+        return new Dimension(viewCols * tileSize, viewRows * tileSize);
     }
 
     @Override
@@ -53,20 +61,53 @@ public class Screen extends JPanel implements KeyListener {
         DLList<Location> keys = map.keySet().toLinkedList();
         for (int i = 0; i < keys.size(); i++) {
             Location loc = keys.get(i);
+            
+            int r = loc.getRow();
+            int c = loc.getCol();
+            
+            if (r < cameraRow || r >= cameraRow + viewRows) continue;
+            if (c < cameraCol || c >= cameraCol + viewCols) continue;
+            
+            int screenRow = r - cameraRow;
+            int screenCol = c - cameraCol;
+            
             DLList<MapObject> objs = map.get(loc);
             if (objs != null) {
                 for (int j = 0; j < objs.size(); j++) {
                     MapObject mo = objs.get(j);
-                    mo.draw(g, loc.getCol(), loc.getRow());
+                    mo.draw(g, screenRow, screenCol);
                 }
             }
-        }   
+        }
+
+        int playerScreenRow = playerRow - cameraRow;
+        int playerScreenCol = playerCol - cameraCol;
+        g.setColor(Color.red);
+        g.fillOval(playerScreenCol * tileSize, playerScreenRow * tileSize, tileSize, tileSize);
+
     }
 
     @Override
     public void keyTyped(KeyEvent e) {}
     @Override
-    public void keyPressed(KeyEvent e) {}
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if (key == KeyEvent.VK_W) playerRow--;
+        if (key == KeyEvent.VK_S) playerRow++;
+        if (key == KeyEvent.VK_A) playerCol--;
+        if (key == KeyEvent.VK_D) playerCol++;
+
+        playerRow = Math.max(0, Math.min(playerRow, 99));
+        playerCol = Math.max(0, Math.min(playerCol, 99));
+
+        cameraRow = playerRow - viewRows / 2;
+        cameraCol = playerCol - viewCols / 2;
+
+        cameraRow = Math.max(0, Math.min(cameraRow, 100 - viewRows));
+        cameraCol = Math.max(0, Math.min(cameraCol, 100 - viewCols));
+
+        repaint();
+    }
     @Override
     public void keyReleased(KeyEvent e) {}
     

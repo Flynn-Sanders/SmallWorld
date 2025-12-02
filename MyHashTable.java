@@ -4,7 +4,7 @@ public class MyHashTable<K,V> {
 
     @SuppressWarnings("unchecked")
     public MyHashTable() {
-        hashArray = new DLList[1009]; 
+        hashArray = new DLList[10000]; 
         keySet = new MyHashSet<>();
     }
 
@@ -13,16 +13,25 @@ public class MyHashTable<K,V> {
     }
 
     public void put(K key, V value) {
-        int idx = index(key);
-        if (hashArray[idx] == null) hashArray[idx] = new DLList<>();
-        hashArray[idx].add(value);
-        keySet.add(key);
+    int idx = index(key);
+    if (hashArray[idx] == null) hashArray[idx] = new DLList<>();
+    
+    // Remove any previous value for the same key
+    DLList<V> bucket = hashArray[idx];
+    if (!bucket.isEmpty()) {
+        bucket.clear();  // remove old value
     }
 
-    public DLList<V> get(Object key) {
-        int idx = Math.abs(key.hashCode()) % hashArray.length;
-        return hashArray[idx];
-    }
+    bucket.add(value);
+    keySet.add(key);
+}
+
+public DLList<V> get(Object key) {
+    int idx = index((K) key);
+    DLList<V> bucket = hashArray[idx];
+    if (bucket != null) return bucket;
+    return null;
+}
 
     public void remove(Object key) {
         int idx = Math.abs(key.hashCode()) % hashArray.length;

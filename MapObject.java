@@ -6,9 +6,11 @@ import java.io.IOException;
 
 public class MapObject {
     private int value;
-    private int tileSize = 4;
+    private int tileSize = 10;
 
     private static BufferedImage rockImg, treeImg;
+
+    
 
     static {
         try {
@@ -31,8 +33,9 @@ public class MapObject {
             case 1 -> Color.yellow;
             case 2 -> new Color(79,58,43);
             case 3 -> Color.blue;
-            case 4 -> Color.green;
+            case 4 -> new Color(79,58,43);
             case 5 -> Color.green;
+            case 6 -> Color.gray;
 
             default -> null;
         };

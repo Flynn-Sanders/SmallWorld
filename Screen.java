@@ -106,10 +106,10 @@ public class Screen extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_W) playerRow--;
-        if (key == KeyEvent.VK_S) playerRow++;
-        if (key == KeyEvent.VK_A) playerCol--;
-        if (key == KeyEvent.VK_D) playerCol++;
+        if (key == KeyEvent.VK_W && map.get(new Location(playerRow-1, playerCol)).get(0).value() <= 2) playerRow--;
+        if (key == KeyEvent.VK_S && map.get(new Location(playerRow+1, playerCol)).get(0).value() <= 2) playerRow++;
+        if (key == KeyEvent.VK_A && map.get(new Location(playerRow, playerCol-1)).get(0).value() <= 2) playerCol--;
+        if (key == KeyEvent.VK_D&& map.get(new Location(playerRow, playerCol+1)).get(0).value() <= 2) playerCol++;
 
         playerRow = Math.max(0, Math.min(playerRow, 99));
         playerCol = Math.max(0, Math.min(playerCol, 99));

@@ -14,14 +14,19 @@ import javax.swing.JPanel;
 public class Screen extends JPanel implements KeyListener {
     private MyHashTable<Location,MapObject> map;
     private static BufferedImage playerImg;
+    
 
-    private int playerRow = 15;
-    private int playerCol = 15;
+    private int playerRow = 34;
+    private int playerCol = 39;
 
-    private int cameraRow = 0;
-    private int cameraCol = 0;  
-    private int viewRows = 35;
-    private int viewCols = 35;  
+    private boolean isNearLandmark;
+    private int markValue;
+     
+    private int viewRows = 30;
+    private int viewCols = 30; 
+
+    private int cameraRow = playerRow-viewRows/2;
+    private int cameraCol = playerCol-viewCols/2;;  
 
     private int tileSize = 25;
 
@@ -40,17 +45,19 @@ public class Screen extends JPanel implements KeyListener {
 
         map = new MyHashTable<>();
 
+        isNearLandmark=false;
+        markValue=0;
+
 
         try {
             Scanner scan = new Scanner(new FileReader("PA_map.txt"));             
-            int row=0; //Each line in your text file is a row
+            int row=0; 
             while (scan.hasNextLine()){
-                //Reads in one line at a time.
                 String line = scan.nextLine();
 
-                //if there's a space between each number in your text file
+                
                 String[] numberArray = line.split(" ");  
-                for(int col=0;col<numberArray .length;col++){  //Each number in the line is a column
+                for(int col=0;col<numberArray .length;col++){  
                     Location key = new Location(row,col);
                     int value = Integer.parseInt(numberArray[col]);
                     map.put(key, new MapObject(value));
@@ -110,15 +117,30 @@ public class Screen extends JPanel implements KeyListener {
         if (key == KeyEvent.VK_S && map.get(new Location(playerRow+1, playerCol)).get(0).value() <= 2) playerRow++;
         if (key == KeyEvent.VK_A && map.get(new Location(playerRow, playerCol-1)).get(0).value() <= 2) playerCol--;
         if (key == KeyEvent.VK_D&& map.get(new Location(playerRow, playerCol+1)).get(0).value() <= 2) playerCol++;
+        if (key == KeyEvent.VK_P) System.out.println("Row: "+playerRow+" - Col: "+playerCol+"\nNear Landmark: "+isNearLandmark+" - markValue: "+markValue);
 
-        playerRow = Math.max(0, Math.min(playerRow, 99));
-        playerCol = Math.max(0, Math.min(playerCol, 99));
+        isNearLandmark = false;
+        for(int r=-1; r<=1; r++){
+            for(int c=-1; c<=1; c++){
+                if(r==0 && c==0) continue;
+                int value = map.get(new Location(playerRow+r, playerCol+c)).get(0).value();
+                if(value > 6){
+                    isNearLandmark = true;
+                    markValue = value;
+                    break;
+                }
+                
+            }
+        }
+
+        playerRow = Math.clamp(playerRow, 0, 99);
+        playerCol = Math.clamp(playerCol,0,99);
 
         cameraRow = playerRow - viewRows / 2;
         cameraCol = playerCol - viewCols / 2;
 
-        cameraRow = Math.max(0, Math.min(cameraRow, 100 - viewRows));
-        cameraCol = Math.max(0, Math.min(cameraCol, 100 - viewCols));
+        cameraRow = Math.clamp(cameraRow, 0, 100-viewRows);
+        cameraCol = Math.clamp(cameraCol,0,100-viewCols);
 
         repaint();
     }

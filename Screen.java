@@ -15,6 +15,17 @@ public class Screen extends JPanel implements KeyListener {
     private MyHashTable<Location,MapObject> map;
     private static BufferedImage playerImg;
     
+    private Boat boat1;
+    private Boat boat2;
+
+    private Deer deer1;
+    private Deer deer2;
+
+    private Bunny bunny1;
+    private Bunny bunny2;
+
+    private Frog frog1;
+    private Frog frog2;
 
     private int playerRow = 34;
     private int playerCol = 39;
@@ -28,7 +39,7 @@ public class Screen extends JPanel implements KeyListener {
     private int cameraRow = playerRow-viewRows/2;
     private int cameraCol = playerCol-viewCols/2;;  
 
-    private int tileSize = 25;
+    public static int tileSize = 25;
 
 
     static {
@@ -68,6 +79,38 @@ public class Screen extends JPanel implements KeyListener {
             e.printStackTrace();
         }
 
+        boat1 = new Boat(map,49,91);
+        boat2 = new Boat(map,52,48);
+        Thread boatThread1 = new Thread(boat1);
+        Thread boatThread2 = new Thread(boat2);
+        boatThread1.start();
+        boatThread2.start();
+
+        deer1 = new Deer(map,57,36);
+        deer2 = new Deer(map,52,75);
+        Thread deerThread1 = new Thread(deer1);
+        Thread deerThread2 = new Thread(deer2);
+        deerThread1.start();
+        deerThread2.start();
+
+        bunny1 = new Bunny(map,77,44);
+        bunny2 = new Bunny(map,29,70);
+        Thread bunnyThread1 = new Thread(bunny1);
+        Thread bunnyThread2 = new Thread(bunny2);
+        bunnyThread1.start();
+        bunnyThread2.start();
+
+        frog1 = new Frog(map,48,45);
+        frog2 = new Frog(map,54,16);
+        Thread frogThread1 = new Thread(frog1);
+        Thread frogThread2 = new Thread(frog2);
+        frogThread1.start();
+        frogThread2.start();
+
+        Animate a = new Animate(this);
+        Thread animThread = new Thread(a);
+        animThread.start();
+
     }
 
     @Override
@@ -100,6 +143,19 @@ public class Screen extends JPanel implements KeyListener {
                 }
             }
         }
+
+        boat1.draw(g,cameraRow,cameraCol);
+        boat2.draw(g,cameraRow,cameraCol);
+
+        deer1.draw(g,cameraRow,cameraCol);
+        deer2.draw(g,cameraRow,cameraCol);
+
+        bunny1.draw(g,cameraRow,cameraCol);
+        bunny2.draw(g,cameraRow,cameraCol);
+
+        frog1.draw(g,cameraRow,cameraCol);
+        frog2.draw(g,cameraRow,cameraCol);
+
 
         int playerScreenRow = playerRow - cameraRow;
         int playerScreenCol = playerCol - cameraCol;

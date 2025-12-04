@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class MapObject {
     private int value;
-    private int tileSize = 25;
+    private int tileSize = Screen.tileSize;
 
     private static BufferedImage rockImg, treeImg, mark7Img, mark8Img, mark9Img, mark10Img, mark11Img;
 

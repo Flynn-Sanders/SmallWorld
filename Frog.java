@@ -29,32 +29,32 @@ public class Frog implements Runnable{
                     int dir = (int)(Math.random()*4)+1;
                     DLList<MapObject> toSquare = null;
                     switch(dir){
-                        case 1:
-                            if (row > 1) toSquare = grid.get(new Location(row - 2, col));
+                        case 1: 
+                            toSquare = (row==0) ? null : grid.get(new Location(row-1, col));
                             break;
-                        case 2:
-                            if (row < 98) toSquare = grid.get(new Location(row + 2, col));
+                        case 2: 
+                            toSquare = (row==99) ? null : grid.get(new Location(row+1, col)); 
                             break;
-                        case 3:
-                            if (col > 1) toSquare = grid.get(new Location(row, col - 2));
+                        case 3: 
+                            toSquare = (col==0) ? null : grid.get(new Location(row, col-1)); 
                             break;
-                        case 4:
-                            if (col < 98) toSquare = grid.get(new Location(row, col + 2));
+                        case 4: 
+                            toSquare = (col==99) ? null : grid.get(new Location(row, col+1)); 
                             break;
                     }
                     if(toSquare!=null && toSquare.get(0).value()<3){
                         switch (dir) {
                             case 1:
-                                row-=2;
+                                row--;
                                 break;
                             case 2:
-                                row+=2;
+                                row++;
                                 break;
                             case 3:
-                                col-=2;
+                                col--;
                                 break;
                             case 4:
-                                col+=2;
+                                col++;
                                 break;
                             default:
                                 break;

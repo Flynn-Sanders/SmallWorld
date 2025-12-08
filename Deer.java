@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Deer implements Runnable{
     private MyHashTable grid;
-    private BufferedImage boatImg;
+    private BufferedImage deerImg;
     private int tileSize = Screen.tileSize;
     int row,col;
 
@@ -15,7 +15,7 @@ public class Deer implements Runnable{
         row=r; col=c;
 
         try {
-            boatImg = ImageIO.read(new File("images/deer.png"));
+            deerImg = ImageIO.read(new File("images/deer.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,6 +78,6 @@ public class Deer implements Runnable{
         int screenRow = row - cameraRow;
         int screenCol = col - cameraCol;
 
-        g.drawImage(boatImg, screenCol*tileSize, screenRow*tileSize, tileSize,tileSize,null);
+        g.drawImage(deerImg, screenCol*tileSize, screenRow*tileSize, tileSize,tileSize,null);
     }
 }

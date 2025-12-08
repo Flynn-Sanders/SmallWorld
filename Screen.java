@@ -3,9 +3,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -40,6 +45,7 @@ public class Screen extends JPanel implements KeyListener {
 
     public static int tileSize = 25;
 
+
     static {
         try {
             playerImg = ImageIO.read(new File("images/player.png"));
@@ -57,6 +63,19 @@ public class Screen extends JPanel implements KeyListener {
 
         isNearLandmark = false;
         markValue = 0;
+
+        boat1 = new Boat(map, 49, 91);
+        boat2 = new Boat(map, 52, 48);
+        
+        deer1 = new Deer(map, 57, 36);
+        deer2 = new Deer(map, 52, 75);
+
+        
+        bunny1 = new Bunny(map, 77, 44);
+        bunny2 = new Bunny(map, 29, 70);
+
+        frog1 = new Frog(map, 48, 45);
+        frog2 = new Frog(map, 54, 16);
 
         try {
             Scanner scan = new Scanner(new FileReader("PA_map.txt"));
@@ -76,28 +95,24 @@ public class Screen extends JPanel implements KeyListener {
             e.printStackTrace();
         }
 
-        boat1 = new Boat(map, 49, 91);
-        boat2 = new Boat(map, 52, 48);
+        loadGame("saveFile.txt");
+
         new Thread(boat1).start();
         new Thread(boat2).start();
 
-        deer1 = new Deer(map, 57, 36);
-        deer2 = new Deer(map, 52, 75);
         new Thread(deer1).start();
         new Thread(deer2).start();
 
-        bunny1 = new Bunny(map, 77, 44);
-        bunny2 = new Bunny(map, 29, 70);
         new Thread(bunny1).start();
         new Thread(bunny2).start();
 
-        frog1 = new Frog(map, 48, 45);
-        frog2 = new Frog(map, 54, 16);
         new Thread(frog1).start();
         new Thread(frog2).start();
 
         Animate a = new Animate(this);
         new Thread(a).start();
+
+        System.out.println("P to save...");
     }
 
     @Override
@@ -172,7 +187,11 @@ public class Screen extends JPanel implements KeyListener {
             playerCol = targetC;
         }
 
-        if (key == KeyEvent.VK_P) System.out.println("Row: " + playerRow + " - Col: " + playerCol + "\nNear Landmark: " + isNearLandmark + " - markValue: " + markValue);
+        if (key == KeyEvent.VK_P){
+            System.out.println("Saving...");
+            saveGame("saveFile.txt");
+            System.out.println("Game Saved");
+        } 
 
         isNearLandmark = false;
         markValue = 0;
@@ -217,6 +236,62 @@ public class Screen extends JPanel implements KeyListener {
         cameraRow = clamp(cameraRow, 0, 100 - viewRows);
         cameraCol = clamp(cameraCol, 0, 100 - viewCols);
     }
+    public void saveGame(String filename) {
+        try (PrintWriter out = new PrintWriter(filename)) {
+            out.println("PLAYER " + playerRow + " " + playerCol);
+
+            out.println("BOAT " + boat1.row + " " + boat1.col);
+            out.println("BOAT " + boat2.row + " " + boat2.col);
+
+            out.println("DEER " + deer1.row + " " + deer1.col);
+            out.println("DEER " + deer2.row + " " + deer2.col);
+
+            out.println("BUNNY " + bunny1.row + " " + bunny1.col);
+            out.println("BUNNY " + bunny2.row + " " + bunny2.col);
+
+            out.println("FROG " + frog1.row + " " + frog1.col);
+            out.println("FROG " + frog2.row + " " + frog2.col);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadGame(String filename) {
+    try (Scanner scan = new Scanner(new File(filename))) {
+        while(scan.hasNextLine()) {
+            String[] parts = scan.nextLine().split(" ");
+            String type = parts[0];
+            int r = Integer.parseInt(parts[1]);
+            int c = Integer.parseInt(parts[2]);
+
+            switch(type) {
+                case "PLAYER":
+                    playerRow = r;
+                    playerCol = c;
+                    break;
+                case "BOAT":
+                    if(boat1 == null) boat1 = new Boat(map,r,c);
+                    else if(boat2 == null) boat2 = new Boat(map,r,c);
+                    break;
+                case "DEER":
+                    if(deer1 == null) deer1 = new Deer(map,r,c);
+                    else if(deer2 == null) deer2 = new Deer(map,r,c);
+                    break;
+                case "BUNNY":
+                    if(bunny1 == null) bunny1 = new Bunny(map,r,c);
+                    else if(bunny2 == null) bunny2 = new Bunny(map,r,c);
+                    break;
+                case "FROG":
+                    if(frog1 == null) frog1 = new Frog(map,r,c);
+                    else if(frog2 == null) frog2 = new Frog(map,r,c);
+                    break;
+            }
+        }
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+    }
+}
 
     private int clamp(int v, int min, int max) {
         if (v < min) return min;

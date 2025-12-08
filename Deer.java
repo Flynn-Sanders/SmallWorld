@@ -70,7 +70,7 @@ public class Deer implements Runnable{
                 }
             }
     }
-    public Point getPos(){
+    public synchronized Point getPos(){
         return new Point(row,col);
     }
     public void draw(Graphics g, int cameraRow, int cameraCol){

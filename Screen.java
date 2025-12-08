@@ -64,19 +64,6 @@ public class Screen extends JPanel implements KeyListener {
         isNearLandmark = false;
         markValue = 0;
 
-        boat1 = new Boat(map, 49, 91);
-        boat2 = new Boat(map, 52, 48);
-        
-        deer1 = new Deer(map, 57, 36);
-        deer2 = new Deer(map, 52, 75);
-
-        
-        bunny1 = new Bunny(map, 77, 44);
-        bunny2 = new Bunny(map, 29, 70);
-
-        frog1 = new Frog(map, 48, 45);
-        frog2 = new Frog(map, 54, 16);
-
         try {
             Scanner scan = new Scanner(new FileReader("PA_map.txt"));
             int row = 0;

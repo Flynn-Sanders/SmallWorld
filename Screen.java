@@ -45,10 +45,23 @@ public class Screen extends JPanel implements KeyListener {
 
     public static int tileSize = 25;
 
+    private static BufferedImage mark1,mark2,mark3,mark4,mark5;
+
+    private Font titleFont = new Font("Arial", Font.BOLD, 17);
+    private Font subscript = new Font("Arial", Font.BOLD, 11);
 
     static {
         try {
             playerImg = ImageIO.read(new File("images/player.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+                mark1 = ImageIO.read(new File("images/mark7.png")); //flight 93 national memorial
+                mark2 = ImageIO.read(new File("images/mark8.png")); //valley forge national historic park
+                mark3 = ImageIO.read(new File("images/mark9.png")); //Phipps Conservatory and Botanical Gardens
+                mark4 = ImageIO.read(new File("images/mark10.png")); // steamtown national historic site
+                mark5 = ImageIO.read(new File("images/mark11.png")); //falling water
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -153,6 +166,43 @@ public class Screen extends JPanel implements KeyListener {
         int playerScreenRow = playerRow - cameraRow;
         int playerScreenCol = playerCol - cameraCol;
         g.drawImage(playerImg, playerScreenCol * tileSize, playerScreenRow * tileSize, tileSize, tileSize, null);
+
+        if(isNearLandmark){
+            
+            BufferedImage img = null;
+            String title ="", desc= "";
+            switch (markValue) {
+                case 7: 
+                    img=mark1;
+                    title = "Flight 93 National Memorial";
+                    desc="A memorial honoring the\npassengers and crew of Flight 93 who\ncourageously resisted the\nhijackers on September 11, 2001.";
+                    break;
+                case 8: //valley frge national historic park
+                    img=mark2;
+                    title = "Valley Forge National\nHistoric Park";
+                    desc="The site of the Continental Army's\n1777-1778 winter encampment, where \nWashington's troops endured\nhardship and emerged stronger.";
+                    break;
+                case 9: //Phipps Conservatory and Botanical Gardens
+                    img=mark3;
+                    title = "Phipps Conservatory and\nBotanical Gardens";
+                    desc="A vast Victorian glasshouse filled\nwith exotic plants, seasonal flower shows,\nand beautifully designed garden spaces.";
+                    break;
+                case 10: //steamtown national historic site
+                    img=mark4;
+                    title = "Steamtown National Historic Site";
+                    desc="A museum and rail yard\ndedicated to the history of\nsteam locomotives,featuring \nrestored trains,tours,\nand working engines.";
+                    break;
+                case 11: //fallingwater
+                    img=mark5;
+                    title = "Fallingwater";
+                    desc="Frank Lloyd Wright's iconic house\nbuilt over a waterfall, celebrated for its\norganic architecture and\nharmony with nature.";
+                    break;
+            
+                default:
+                    break;
+            }
+            drawInfo(img, title, desc, g);
+        }
     }
 
     @Override
@@ -211,6 +261,43 @@ public class Screen extends JPanel implements KeyListener {
         if (list == null || list.isEmpty()) return false;
         int value = list.get(0).value();
         return value <= 2;
+    }
+
+    private void drawInfo(BufferedImage img, String title, String desc, Graphics g){
+        g.setColor(Color.white);
+        int x = 440; int y = 150; int w = 300; int h = 450;
+        g.fillRect(x, y, w, h);
+
+        
+        g.drawImage(img, x+25, y+50,250,250,null);
+
+        g.setColor(Color.black);
+        g.setFont(titleFont);
+        FontMetrics fm = g.getFontMetrics();
+        int textWidth = fm.stringWidth(title);
+        int cx = x + (w - textWidth) / 2;
+        String[] titleLines = title.split("\n");
+        int titleLineHeight = fm.getHeight();
+        if(title.contains("\n")){
+            for (int i = 0; i < titleLines.length; i++) {
+                textWidth = fm.stringWidth(titleLines[i]);
+                int drawX = x + (w - textWidth) / 2; 
+                g.drawString(titleLines[i], drawX, y+20 + i*(titleLineHeight+5));
+            }
+        }
+        else g.drawString(title, cx , y+35);
+        
+    
+        g.setFont(subscript);
+        fm=g.getFontMetrics();
+        String[] lines = desc.split("\n");
+        int lineHeight = fm.getHeight();
+
+        for (int i = 0; i < lines.length; i++) {
+            textWidth = fm.stringWidth(lines[i]);
+            int drawX = x + (w - textWidth) / 2; 
+            g.drawString(lines[i], drawX, y+350 + i*(lineHeight+5));
+        }
     }
 
     private boolean inBounds(int r, int c) {

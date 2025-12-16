@@ -172,7 +172,7 @@ public class Screen extends JPanel implements KeyListener {
             BufferedImage img = null;
             String title ="", desc= "";
             switch (markValue) {
-                case 7: 
+                case 7: // flight 93
                     img=mark1;
                     title = "Flight 93 National Memorial";
                     desc="A memorial honoring the\npassengers and crew of Flight 93 who\ncourageously resisted the\nhijackers on September 11, 2001.";
